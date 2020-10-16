@@ -1,6 +1,6 @@
 # portscanner-sync
 
-[![Build Status](https://travis-ci.com/csymapp/portscanner-sync.svg?branch=master)](https://travis-ci.com/csymapp/portscanner-sync)
+[![Build Status](https://travis-ci.com/csymapp/node-portscanner.svg?branch=master)](https://travis-ci.com/csymapp/node-portscanner)
 
 The portscanner module is a synchronous port scanner for Node.js
 
