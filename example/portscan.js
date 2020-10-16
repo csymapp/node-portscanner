@@ -1,35 +1,58 @@
-var http = require('http')
-var portscanner = require('../lib/portscanner.js')
 
-// Sets up an HTTP server listening on port 3005
-var server = http.createServer(function (request, response) {
-})
+const portScanner = require('../lib/portscanner');
+const to = require('await-to-js').to;
 
-server.listen(3005, '127.0.0.1', function () {
-  // Checks the status of an individual port.
-  portscanner.checkPortStatus(3005, '127.0.0.1', function (error, status) {
-    // Status should be 'open' since the HTTP server is listening on that port
-    console.log('Status at port 3005 is ' + status)
-    if (error) console.error(error)
-  })
-  portscanner.checkPortStatus(3000, '127.0.0.1', function (error, status) {
-    // Status should be 'closed' since no service is listening on that port.
-    console.log('Status at port 3000 is ' + status)
-    if (error) console.error(error)
-  })
+let main = async () => {
+    let [err, care] = [];
+    let status;
+    let port;
+    
+    // Checks the status of an individual port.
+    [err, care] = await to(portScanner.checkPortStatus(3005, '127.0.0.1'));
+    status = care;
+    if (err) {
+        console.error(err)
+    } else {
+        console.log('Status at port 3005 is ' + status)
+    }
+    [err, care] = await to(portScanner.checkPortStatus(2999, '127.0.0.1'));
+    status = care;
+    if (err) {
+        console.error(err)
+    } else {
+        console.log('Status at port 2999 is ' + status)
+    }
+    [err, care] = await to(portScanner.checkPortStatus(3000, '127.0.0.1'));
+    status = care;
+    if (err) {
+        console.error(err)
+    } else {
+        console.log('Status at port 3000 is ' + status)
+    }
+    [err, care] = await to(portScanner.checkPortStatus(3001, '127.0.0.1'));
+    status = care;
+    if (err) {
+        console.error(err)
+    } else {
+        console.log('Status at port 3001 is ' + status)
+    }
 
-  // Finds a port that a service is listening on
-  portscanner.findAPortInUse(3000, 3010, '127.0.0.1', function (error, port) {
-    // Port should be 3005 as the HTTP server is listening on that port
-    console.log('Found an open port at ' + port)
-    if (error) console.error(error)
-  })
-  // Finds a port no service is listening on
-  portscanner.findAPortNotInUse(3000, 3010, '127.0.0.1', function (error, port) {
-    // Will return any number between 3000 and 3010 (inclusive), that's not 3005.
-    // The order is unknown as the port status checks are asynchronous.
-    console.log('Found a closed port at ' + port)
-    if (error) console.error(error)
-  })
-})
+    // Finds a port that a service is listening on
+    [err, care] = await to(portScanner.findAPortInUse(2900, 3010, '127.0.0.1'));
+    port = care
+    if (err) {
+        console.error(err)
+    } else {
+        console.log('Found an open port at ' + port)
+    }
 
+    [err, care] = await to(portScanner.findAPortNotInUse([80,3000, 3010], '127.0.0.1'));
+    port = care
+    if (err) {
+        console.error(err)
+    } else {
+        console.log('Found a closed port at ' + port)
+    }
+}
+
+main()
